@@ -5,9 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
 
 @Document
-class Post(
+data class Post(
     @Id
-    var id: String?,
+    val id: String? = null,
     var title: String,
     var content: String,
     var author: String,
