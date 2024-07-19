@@ -25,7 +25,11 @@ class PostService {
 
     @Transactional(readOnly = true)
     fun findPostById(id: String): PostDTO {
-        return PostDTO.fromEntity(repository.findById(id).get())
+        try {
+            return PostDTO.fromEntity(repository.findById(id).get())
+        } catch (e: NoSuchElementException) {
+            throw PostNotFoundException("Post not found")
+        }
     }
 
     @Transactional
