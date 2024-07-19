@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PostRepository : MongoRepository<Post, String> {
+
 }
