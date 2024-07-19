@@ -1,0 +1,16 @@
+package br.dev.saed.blog.dto
+
+import java.time.Instant
+
+class ValidationError(
+    timestamp: Instant,
+    status: Int,
+    error: String,
+    path: String
+) : CustomError(timestamp, status, error, path) {
+    val errors: MutableList<FieldMessage> = mutableListOf()
+
+    fun addError(fieldName: String, message: String) {
+        errors.add(FieldMessage(fieldName, message))
+    }
+}

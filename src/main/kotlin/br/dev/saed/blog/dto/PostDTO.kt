@@ -3,6 +3,7 @@ package br.dev.saed.blog.dto
 import br.dev.saed.blog.entities.Comment
 import br.dev.saed.blog.entities.Post
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 class PostDTO(
     var id: String? = null,
@@ -10,7 +11,7 @@ class PostDTO(
     var content: String,
     var author: String,
     var tags: List<String>,
-    var date: LocalDate,
+    var date: LocalDateTime,
     var comments: List<Comment>
 ) {
     companion object {
