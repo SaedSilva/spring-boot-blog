@@ -8,7 +8,7 @@ class ValidationError(
     error: String,
     path: String
 ) : CustomError(timestamp, status, error, path) {
-    val errors: MutableList<FieldMessage> = mutableListOf()
+    private val errors: MutableList<FieldMessage> = mutableListOf()
 
     fun addError(fieldName: String, message: String) {
         errors.add(FieldMessage(fieldName, message))
