@@ -14,38 +14,38 @@ import org.springframework.transaction.annotation.Transactional
 class PostService {
 
     @Autowired
-    private lateinit var postRepository: PostRepository
+    private lateinit var repository: PostRepository
 
     @Transactional(readOnly = true)
     fun listPosts(pageable: Pageable): Page<PostDTO> {
-        val pagePost = postRepository.findAll(pageable)
+        val pagePost = repository.findAll(pageable)
         val pagePostDTO = pagePost.map { PostDTO.fromEntity(it) }
         return pagePostDTO
     }
 
     @Transactional(readOnly = true)
     fun findPostById(id: String): PostDTO {
-        return PostDTO.fromEntity(postRepository.findById(id).get())
+        return PostDTO.fromEntity(repository.findById(id).get())
     }
 
     @Transactional
     fun insertPost(dto: PostDTO): PostDTO {
-        val entity = Post(null, dto.title, dto.content, dto.author, dto.tags, dto.date, dto.comments)
-        postRepository.save(entity)
+        var entity = Post(null, dto.title, dto.content, dto.author, dto.tags, dto.date, dto.comments)
+        entity = repository.save(entity)
         return PostDTO.fromEntity(entity)
     }
 
     @Transactional
     fun updatePost(id: String, dto: PostDTO): PostDTO {
         try {
-            val entity = postRepository.findById(id).get()
+            val entity = repository.findById(id).get()
             entity.title = dto.title
             entity.content = dto.content
             entity.author = dto.author
             entity.tags = dto.tags
             entity.date = dto.date
             entity.comments = dto.comments
-            postRepository.save(entity)
+            repository.save(entity)
             return PostDTO.fromEntity(entity)
         } catch (e: NoSuchElementException) {
             throw PostNotFoundException("Post not found")
@@ -54,7 +54,10 @@ class PostService {
 
     @Transactional
     fun deletePost(id: String) {
-        postRepository.deleteById(id)
+        if (!repository.existsById(id)) {
+            throw PostNotFoundException("Post not found")
+        }
+        repository.deleteById(id)
     }
 
 }
