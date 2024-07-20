@@ -3,7 +3,7 @@ package br.dev.saed.blog.services
 import br.dev.saed.blog.entities.Post
 import br.dev.saed.blog.repositories.PostRepository
 import br.dev.saed.blog.dto.PostDTO
-import br.dev.saed.blog.services.exceptions.PostNotFoundException
+import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -28,7 +28,7 @@ class PostService {
         try {
             return PostDTO.fromEntity(repository.findById(id).get())
         } catch (e: NoSuchElementException) {
-            throw PostNotFoundException("Post not found")
+            throw ResourceNotFoundException("Post not found")
         }
     }
 
@@ -52,14 +52,14 @@ class PostService {
             repository.save(entity)
             return PostDTO.fromEntity(entity)
         } catch (e: NoSuchElementException) {
-            throw PostNotFoundException("Post not found")
+            throw ResourceNotFoundException("Post not found")
         }
     }
 
     @Transactional
     fun deletePost(id: String) {
         if (!repository.existsById(id)) {
-            throw PostNotFoundException("Post not found")
+            throw ResourceNotFoundException("Post not found")
         }
         repository.deleteById(id)
     }
