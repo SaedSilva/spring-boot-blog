@@ -1,6 +1,6 @@
 package br.dev.saed.blog.services
 
-import br.dev.saed.blog.dto.UserDTO
+import br.dev.saed.blog.dto.user.UserDTO
 import br.dev.saed.blog.entities.User
 import br.dev.saed.blog.repositories.UserRepository
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException

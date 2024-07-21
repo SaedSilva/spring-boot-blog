@@ -1,6 +1,6 @@
 package br.dev.saed.blog.controllers.handlers
 
-import br.dev.saed.blog.dto.CustomError
+import br.dev.saed.blog.dto.errors.CustomError
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus

@@ -1,11 +1,10 @@
-package br.dev.saed.blog.dto
+package br.dev.saed.blog.dto.post
 
 import br.dev.saed.blog.entities.Comment
 import br.dev.saed.blog.entities.Post
-import java.time.LocalDate
 import java.time.LocalDateTime
 
-class PostDTO(
+data class PostDTO(
     var id: String? = null,
     var title: String,
     var content: String,

@@ -4,10 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.security.core.GrantedAuthority
 
-@Document
 data class Role(
-    @Id
-    val id: String? = null,
     val role: String
 ) : GrantedAuthority {
 

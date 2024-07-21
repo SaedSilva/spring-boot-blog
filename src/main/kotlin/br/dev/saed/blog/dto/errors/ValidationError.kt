@@ -1,4 +1,4 @@
-package br.dev.saed.blog.dto
+package br.dev.saed.blog.dto.errors
 
 import java.time.Instant
 

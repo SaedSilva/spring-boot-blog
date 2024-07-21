@@ -1,6 +1,6 @@
 package br.dev.saed.blog.controllers
 
-import br.dev.saed.blog.dto.PostDTO
+import br.dev.saed.blog.dto.post.PostDTO
 import br.dev.saed.blog.services.PostService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

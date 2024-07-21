@@ -2,7 +2,7 @@ package br.dev.saed.blog.services
 
 import br.dev.saed.blog.entities.Post
 import br.dev.saed.blog.repositories.PostRepository
-import br.dev.saed.blog.dto.PostDTO
+import br.dev.saed.blog.dto.post.PostDTO
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

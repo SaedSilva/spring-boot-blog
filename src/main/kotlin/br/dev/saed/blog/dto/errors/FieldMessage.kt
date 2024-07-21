@@ -1,4 +1,4 @@
-package br.dev.saed.blog.dto
+package br.dev.saed.blog.dto.errors
 
 data class FieldMessage (
     val fieldName: String,

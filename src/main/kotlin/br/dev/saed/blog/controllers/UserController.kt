@@ -1,9 +1,10 @@
 package br.dev.saed.blog.controllers
 
-import br.dev.saed.blog.dto.UserDTO
+import br.dev.saed.blog.dto.user.UserDTO
 import br.dev.saed.blog.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -13,9 +14,11 @@ class UserController {
     @Autowired
     private lateinit var service: UserService
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     fun insertUser(@RequestBody dto: UserDTO): ResponseEntity<UserDTO> = ResponseEntity.ok().body(service.insertUser(dto))
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @DeleteMapping(value = ["/{id}"])
     fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {
         service.deleteUser(id)

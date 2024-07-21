@@ -1,9 +1,9 @@
-package br.dev.saed.blog.dto
+package br.dev.saed.blog.dto.user
 
 import br.dev.saed.blog.entities.Role
 import br.dev.saed.blog.entities.User
 
-class UserDTO(
+data class UserDTO(
     var id: String? = null,
     var name: String,
     var email: String,
