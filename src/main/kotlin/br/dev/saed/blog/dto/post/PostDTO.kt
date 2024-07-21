@@ -10,7 +10,7 @@ data class PostDTO(
     var content: String,
     var author: String,
     var tags: List<String>,
-    var date: LocalDateTime,
+    var date: LocalDateTime? = null,
     var comments: List<Comment>
 ) {
     companion object {
