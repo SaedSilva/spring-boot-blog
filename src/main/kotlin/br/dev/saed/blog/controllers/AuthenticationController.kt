@@ -39,7 +39,6 @@ class AuthenticationController {
         }
 
         val encryptedPassword = BCryptPasswordEncoder().encode(data.userPassword)
-
         data.userPassword = encryptedPassword
 
         repository.save(RegisterDTO.toEntity(data))
