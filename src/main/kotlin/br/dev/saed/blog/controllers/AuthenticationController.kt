@@ -1,7 +1,10 @@
 package br.dev.saed.blog.controllers
 
+import br.dev.saed.blog.configs.security.TokenService
 import br.dev.saed.blog.dto.user.AuthenticationDTO
+import br.dev.saed.blog.dto.user.LoginResponseDTO
 import br.dev.saed.blog.dto.user.RegisterDTO
+import br.dev.saed.blog.entities.User
 import br.dev.saed.blog.repositories.UserRepository
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,21 +22,24 @@ import org.springframework.web.bind.annotation.RestController
 class AuthenticationController {
 
     @Autowired
+    private lateinit var tokenService: TokenService
+
+    @Autowired
     private lateinit var repository: UserRepository
 
     @Autowired
     private lateinit var authenticationManager: AuthenticationManager
 
     @PostMapping(value = ["/login"])
-    fun login(@RequestBody @Valid data: AuthenticationDTO): ResponseEntity<Unit> {
+    fun login(@RequestBody @Valid data: AuthenticationDTO): ResponseEntity<Any> {
         val emailPassword = UsernamePasswordAuthenticationToken(data.email, data.userPassword) // Cria um token de autenticação
         val auth = authenticationManager.authenticate(emailPassword)
-
-        return ResponseEntity.ok().build()
+        val token = tokenService.generateToken(auth.principal as User)
+        return ResponseEntity.ok(LoginResponseDTO(token))
     }
 
     @PostMapping(value = ["/register"])
-    fun register(@RequestBody @Valid data: RegisterDTO): ResponseEntity<Unit> {
+    fun register(@RequestBody @Valid data: RegisterDTO): ResponseEntity<Any> {
         if(repository.existsByEmail(data.email)) {
             return ResponseEntity.badRequest().build()
         }

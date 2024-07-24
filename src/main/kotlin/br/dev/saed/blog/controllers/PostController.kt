@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -30,6 +31,7 @@ class PostController {
         return ResponseEntity.ok().body(service.findPostById(id))
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
     fun insertPost(@RequestBody postDTO: PostDTO): ResponseEntity<PostDTO> = ResponseEntity.ok().body(service.insertPost(postDTO))
 
@@ -41,6 +43,12 @@ class PostController {
     @DeleteMapping(value = ["/{id}"])
     fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {
         service.deletePost(id)
+        return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping
+    fun deleteAllPosts(): ResponseEntity<Unit> {
+        service.deleteAllPosts()
         return ResponseEntity.noContent().build()
     }
 }

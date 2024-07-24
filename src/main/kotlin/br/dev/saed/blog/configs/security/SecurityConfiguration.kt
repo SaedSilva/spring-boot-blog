@@ -1,5 +1,6 @@
 package br.dev.saed.blog.configs.security
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -10,10 +11,14 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity // Habilita a segurança web
 class SecurityConfiguration {
+
+    @Autowired
+    private lateinit var securityFilter: SecurityFilter
 
     // Configura o codificador de senha
     @Bean
@@ -27,6 +32,7 @@ class SecurityConfiguration {
             .csrf { csrf -> csrf.disable() } // Desabilita o CSRF (Cross-Site Request Forgery)
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // Define a política de criação de sessão como STATELESS
             .authorizeHttpRequests { auth -> auth.anyRequest().permitAll() } // Permite todas as requisições
+//            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
 

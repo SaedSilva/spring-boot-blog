@@ -11,7 +11,6 @@ data class PostDTO(
     var author: String,
     var tags: List<String>,
     var date: LocalDateTime? = null,
-    var comments: List<Comment>
 ) {
     companion object {
         fun fromEntity(entity: Post): PostDTO {
@@ -21,8 +20,7 @@ data class PostDTO(
                 entity.content,
                 entity.author,
                 entity.tags,
-                entity.date,
-                entity.comments
+                entity.date
             )
         }
     }

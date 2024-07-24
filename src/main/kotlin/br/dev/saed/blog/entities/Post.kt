@@ -13,7 +13,6 @@ data class Post(
     var author: String,
     var tags: List<String>,
     var date: LocalDateTime,
-    var comments: List<Comment>
 )
 
 /*
