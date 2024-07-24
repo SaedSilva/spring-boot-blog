@@ -31,7 +31,6 @@ class PostController {
         return ResponseEntity.ok().body(service.findPostById(id))
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
     fun insertPost(@RequestBody postDTO: PostDTO): ResponseEntity<PostDTO> = ResponseEntity.ok().body(service.insertPost(postDTO))
 

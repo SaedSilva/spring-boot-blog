@@ -5,7 +5,7 @@ import br.dev.saed.blog.dto.user.AuthenticationDTO
 import br.dev.saed.blog.dto.user.LoginResponseDTO
 import br.dev.saed.blog.dto.user.RegisterDTO
 import br.dev.saed.blog.entities.User
-import br.dev.saed.blog.repositories.UserRepository
+import br.dev.saed.blog.services.AuthenticationService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -25,7 +25,7 @@ class AuthenticationController {
     private lateinit var tokenService: TokenService
 
     @Autowired
-    private lateinit var repository: UserRepository
+    private lateinit var authenticationService: AuthenticationService
 
     @Autowired
     private lateinit var authenticationManager: AuthenticationManager
@@ -40,14 +40,11 @@ class AuthenticationController {
 
     @PostMapping(value = ["/register"])
     fun register(@RequestBody @Valid data: RegisterDTO): ResponseEntity<Any> {
-        if(repository.existsByEmail(data.email)) {
-            return ResponseEntity.badRequest().build()
-        }
 
         val encryptedPassword = BCryptPasswordEncoder().encode(data.userPassword)
         data.userPassword = encryptedPassword
 
-        repository.save(RegisterDTO.toEntity(data))
+        authenticationService.save(RegisterDTO.toEntity(data))
         return ResponseEntity.ok().build()
     }
 }

@@ -19,11 +19,9 @@ class UserController {
     @GetMapping
     fun listUsersPage(pageable: Pageable): ResponseEntity<Page<UserDTO>> = ResponseEntity.ok(service.listUsersPage(pageable))
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     fun insertUser(@RequestBody dto: UserDTO): ResponseEntity<UserDTO> = ResponseEntity.ok().body(service.insertUser(dto))
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @DeleteMapping(value = ["/{id}"])
     fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {
         service.deleteUser(id)
