@@ -1,6 +1,7 @@
 package br.dev.saed.blog.controllers.handlers
 
 import br.dev.saed.blog.dto.errors.CustomError
+import br.dev.saed.blog.services.exceptions.ExistsByEmailException
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -15,6 +16,13 @@ class ControllerExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException::class)
     fun postNotFound(e: ResourceNotFoundException, request: HttpServletRequest) : ResponseEntity<CustomError> {
         val status = HttpStatus.NOT_FOUND
+        val error = CustomError(Instant.now(), status.value(), e.message!!, request.requestURI)
+        return ResponseEntity.status(status).body(error)
+    }
+
+    @ExceptionHandler(ExistsByEmailException::class)
+    fun emailAlreadyExists(e: ExistsByEmailException, request: HttpServletRequest) : ResponseEntity<CustomError> {
+        val status = HttpStatus.BAD_REQUEST
         val error = CustomError(Instant.now(), status.value(), e.message!!, request.requestURI)
         return ResponseEntity.status(status).body(error)
     }
