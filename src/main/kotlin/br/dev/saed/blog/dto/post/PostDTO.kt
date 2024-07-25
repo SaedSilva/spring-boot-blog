@@ -1,6 +1,5 @@
 package br.dev.saed.blog.dto.post
 
-import br.dev.saed.blog.entities.Comment
 import br.dev.saed.blog.entities.Post
 import java.time.LocalDateTime
 
@@ -9,6 +8,7 @@ data class PostDTO(
     var title: String,
     var content: String,
     var author: String,
+    var authorId: String,
     var tags: List<String>,
     var date: LocalDateTime? = null,
 ) {
@@ -19,6 +19,7 @@ data class PostDTO(
                 entity.title,
                 entity.content,
                 entity.author,
+                entity.authorId,
                 entity.tags,
                 entity.date
             )

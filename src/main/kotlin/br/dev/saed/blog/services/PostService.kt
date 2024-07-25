@@ -35,7 +35,7 @@ class PostService {
 
     @Transactional
     fun insertPost(dto: PostDTO): PostDTO {
-        var entity = Post(null, dto.title, dto.content, dto.author, dto.tags, LocalDateTime.now())
+        var entity = Post(null, dto.title, dto.content, dto.author, dto.authorId, dto.tags, LocalDateTime.now())
         entity = repository.save(entity)
         return PostDTO.fromEntity(entity)
     }
@@ -47,6 +47,7 @@ class PostService {
             entity.title = dto.title
             entity.content = dto.content
             entity.author = dto.author
+            entity.authorId = dto.authorId
             entity.tags = dto.tags
             repository.save(entity)
             return PostDTO.fromEntity(entity)

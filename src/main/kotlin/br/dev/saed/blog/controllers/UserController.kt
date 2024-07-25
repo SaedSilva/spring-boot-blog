@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -20,7 +19,7 @@ class UserController {
     fun listUsersPage(pageable: Pageable): ResponseEntity<Page<UserDTO>> = ResponseEntity.ok(service.listUsersPage(pageable))
 
     @PostMapping
-    fun insertUser(@RequestBody dto: UserDTO): ResponseEntity<UserDTO> = ResponseEntity.ok().body(service.insertUser(dto))
+    fun insertUser(@RequestBody dto: UserDTO): ResponseEntity<UserDTO> = ResponseEntity.ok(service.insertUser(dto))
 
     @DeleteMapping(value = ["/{id}"])
     fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {

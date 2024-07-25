@@ -11,6 +11,7 @@ data class Post(
     var title: String,
     var content: String,
     var author: String,
+    var authorId: String,
     var tags: List<String>,
     var date: LocalDateTime,
 )

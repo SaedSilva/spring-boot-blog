@@ -10,6 +10,7 @@ data class Comment(
     var id: String? = null,
     var postId: String,
     var author: String,
+    var authorId: String,
     var content: String,
     var date: LocalDateTime
 )

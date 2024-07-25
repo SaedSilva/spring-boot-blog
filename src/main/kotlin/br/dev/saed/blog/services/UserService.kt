@@ -44,6 +44,12 @@ class UserService {
         repository.deleteById(id)
     }
 
+    fun findUserById(id: String): UserDTO {
+        val entity = repository.findById(id).orElseThrow { ResourceNotFoundException("User not found") }
+        return UserDTO.fromEntity(entity)
+    }
+
+    @Transactional(readOnly = true)
     fun findByEmail(email: String): UserDetails? {
         return try {
             repository.findByEmail(email)

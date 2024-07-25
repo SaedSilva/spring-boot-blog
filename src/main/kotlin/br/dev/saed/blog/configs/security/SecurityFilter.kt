@@ -36,7 +36,6 @@ class SecurityFilter : OncePerRequestFilter() {
 
     private fun recoverToken(request: HttpServletRequest): String? {
         val authHeader = request.getHeader("Authorization") ?: return null
-
         return authHeader.replace("Bearer ", "")
     }
 
