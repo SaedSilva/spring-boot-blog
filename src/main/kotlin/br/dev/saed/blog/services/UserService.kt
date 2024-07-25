@@ -1,6 +1,7 @@
 package br.dev.saed.blog.services
 
 import br.dev.saed.blog.dto.user.UserDTO
+import br.dev.saed.blog.dto.user.UserMinDTO
 import br.dev.saed.blog.entities.User
 import br.dev.saed.blog.repositories.UserRepository
 import br.dev.saed.blog.services.exceptions.ExistsByEmailException
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -56,6 +58,13 @@ class UserService {
         } catch (e: EmptyResultDataAccessException) {
             null
         }
+    }
+
+    @Transactional(readOnly = true)
+    fun getMe(): UserMinDTO {
+        val email = SecurityContextHolder.getContext().authentication.name
+        val user = repository.searchUserByEmail(email)
+        return UserMinDTO.fromEntity(user.get())
     }
 
 }

@@ -45,7 +45,7 @@ class PostController {
     }
 
     @GetMapping(value = ["/author/{id}"])
-    fun searchPostsByAuthorId(@PathVariable id: String, pageable: Pageable): ResponseEntity<Page<PostDTO>> {
-        return ResponseEntity.ok(postService.searchPostsByAuthorId(id, pageable))
+    fun findPostsByAuthorId(@PathVariable id: String, pageable: Pageable): ResponseEntity<Page<PostDTO>> {
+        return ResponseEntity.ok(postService.findPostsByAuthorId(id, pageable))
     }
 }

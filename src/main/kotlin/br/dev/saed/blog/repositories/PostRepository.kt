@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface PostRepository : MongoRepository<Post, String> {
 
-    fun searchPostsByAuthorId(id: String, pageable: Pageable): Page<Post>
+    fun findPostsByAuthorId(id: String, pageable: Pageable): Page<Post>
 }

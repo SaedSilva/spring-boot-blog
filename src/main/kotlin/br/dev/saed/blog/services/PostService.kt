@@ -65,10 +65,9 @@ class PostService {
     }
 
     @Transactional(readOnly = true)
-    fun searchPostsByAuthorId(id: String, pageable: Pageable): Page<PostDTO> {
-        val pagePost = repository.searchPostsByAuthorId(id, pageable)
+    fun findPostsByAuthorId(id: String, pageable: Pageable): Page<PostDTO> {
+        val pagePost = repository.findPostsByAuthorId(id, pageable)
         val pagePostDTO = pagePost.map { PostDTO.fromEntity(it) }
         return pagePostDTO
     }
-
 }

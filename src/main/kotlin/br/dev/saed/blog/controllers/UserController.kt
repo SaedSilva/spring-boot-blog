@@ -1,6 +1,7 @@
 package br.dev.saed.blog.controllers
 
 import br.dev.saed.blog.dto.user.UserDTO
+import br.dev.saed.blog.dto.user.UserMinDTO
 import br.dev.saed.blog.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -25,5 +26,11 @@ class UserController {
     fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {
         service.deleteUser(id)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping(value = ["/me"])
+    fun getMe(): ResponseEntity<UserMinDTO> {
+        val user = service.getMe()
+        return ResponseEntity.ok(user)
     }
 }
