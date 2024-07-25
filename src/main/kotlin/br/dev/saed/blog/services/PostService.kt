@@ -64,4 +64,11 @@ class PostService {
         repository.deleteById(id)
     }
 
+    @Transactional(readOnly = true)
+    fun searchPostsByAuthorId(id: String, pageable: Pageable): Page<PostDTO> {
+        val pagePost = repository.searchPostsByAuthorId(id, pageable)
+        val pagePostDTO = pagePost.map { PostDTO.fromEntity(it) }
+        return pagePostDTO
+    }
+
 }

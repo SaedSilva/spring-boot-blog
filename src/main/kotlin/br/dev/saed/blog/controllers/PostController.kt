@@ -14,33 +14,38 @@ import org.springframework.web.bind.annotation.*
 class PostController {
 
     @Autowired
-    private lateinit var service: PostService
+    private lateinit var postService: PostService
 
     @Autowired
     private lateinit var userService: UserService
 
     @GetMapping
-    fun listPosts(pageable: Pageable): ResponseEntity<Page<PostDTO>> = ResponseEntity.ok(service.listPosts(pageable))
+    fun listPosts(pageable: Pageable): ResponseEntity<Page<PostDTO>> = ResponseEntity.ok(postService.listPosts(pageable))
 
     @GetMapping(value = ["/{id}"])
     fun findPostById(@PathVariable id: String): ResponseEntity<PostDTO> {
-        return ResponseEntity.ok().body(service.findPostById(id))
+        return ResponseEntity.ok().body(postService.findPostById(id))
     }
 
     @PostMapping
     fun insertPost(@RequestBody postDTO: PostDTO): ResponseEntity<PostDTO> {
-        val authorId = userService.findUserById(postDTO.authorId).id
-        return ResponseEntity.ok().body(service.insertPost(postDTO))
+        userService.findUserById(postDTO.authorId).id
+        return ResponseEntity.ok().body(postService.insertPost(postDTO))
     }
 
     @PutMapping(value = ["/{id}"])
     fun updatePost(@PathVariable id: String, @RequestBody dto: PostDTO): ResponseEntity<PostDTO> {
-        return ResponseEntity.ok().body(service.updatePost(id, dto))
+        return ResponseEntity.ok().body(postService.updatePost(id, dto))
     }
 
     @DeleteMapping(value = ["/{id}"])
     fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {
-        service.deletePost(id)
+        postService.deletePost(id)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping(value = ["/author/{id}"])
+    fun searchPostsByAuthorId(@PathVariable id: String, pageable: Pageable): ResponseEntity<Page<PostDTO>> {
+        return ResponseEntity.ok(postService.searchPostsByAuthorId(id, pageable))
     }
 }

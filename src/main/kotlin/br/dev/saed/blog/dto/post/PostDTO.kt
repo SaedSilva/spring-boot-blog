@@ -4,7 +4,6 @@ import br.dev.saed.blog.entities.Post
 import java.time.LocalDateTime
 
 data class PostDTO(
-    var id: String? = null,
     var title: String,
     var content: String,
     var author: String,
@@ -15,7 +14,6 @@ data class PostDTO(
     companion object {
         fun fromEntity(entity: Post): PostDTO {
             return PostDTO(
-                entity.id,
                 entity.title,
                 entity.content,
                 entity.author,
