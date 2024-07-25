@@ -63,9 +63,4 @@ class PostService {
         repository.deleteById(id)
     }
 
-    @Transactional
-    fun deleteAllPosts() {
-        repository.deleteAll()
-    }
-
 }

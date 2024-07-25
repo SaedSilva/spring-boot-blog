@@ -1,7 +1,6 @@
 package br.dev.saed.blog.configs.security
 
-import br.dev.saed.blog.repositories.PostRepository
-import br.dev.saed.blog.repositories.UserRepository
+import br.dev.saed.blog.services.UserService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -18,7 +17,7 @@ class SecurityFilter : OncePerRequestFilter() {
     private lateinit var tokenService: TokenService
 
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userService: UserService
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -28,18 +27,16 @@ class SecurityFilter : OncePerRequestFilter() {
         val token = recoverToken(request)
         if (token != null) {
             val email = tokenService.validateToken(token)
-            val userDetails = userRepository.findByEmail(email)
-
-            val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+            val userDetails = userService.findByEmail(email)
+            val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails?.authorities)
             SecurityContextHolder.getContext().authentication = authentication
         }
         filterChain.doFilter(request, response)
     }
 
     private fun recoverToken(request: HttpServletRequest): String? {
-        val authHeader = request.getHeader("Authorization")
+        val authHeader = request.getHeader("Authorization") ?: return null
 
-        if(authHeader == null) return null
         return authHeader.replace("Bearer ", "")
     }
 

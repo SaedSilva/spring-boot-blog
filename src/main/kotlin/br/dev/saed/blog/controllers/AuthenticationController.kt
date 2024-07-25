@@ -31,20 +31,20 @@ class AuthenticationController {
     private lateinit var authenticationManager: AuthenticationManager
 
     @PostMapping(value = ["/login"])
-    fun login(@RequestBody @Valid data: AuthenticationDTO): ResponseEntity<Any> {
-        val emailPassword = UsernamePasswordAuthenticationToken(data.email, data.userPassword) // Cria um token de autenticação
+    fun login(@RequestBody @Valid dto: AuthenticationDTO): ResponseEntity<Any> {
+        val emailPassword = UsernamePasswordAuthenticationToken(dto.email, dto.userPassword) // Cria um token de autenticação
         val auth = authenticationManager.authenticate(emailPassword)
         val token = tokenService.generateToken(auth.principal as User)
         return ResponseEntity.ok(LoginResponseDTO(token))
     }
 
     @PostMapping(value = ["/register"])
-    fun register(@RequestBody @Valid data: RegisterDTO): ResponseEntity<Any> {
+    fun register(@RequestBody @Valid dto: RegisterDTO): ResponseEntity<Any> {
 
-        val encryptedPassword = BCryptPasswordEncoder().encode(data.userPassword)
-        data.userPassword = encryptedPassword
+        val encryptedPassword = BCryptPasswordEncoder().encode(dto.userPassword)
+        dto.userPassword = encryptedPassword
 
-        authenticationService.save(RegisterDTO.toEntity(data))
+        authenticationService.save(RegisterDTO.toEntity(dto))
         return ResponseEntity.ok().build()
     }
 }

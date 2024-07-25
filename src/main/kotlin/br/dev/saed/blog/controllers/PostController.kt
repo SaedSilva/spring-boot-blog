@@ -44,10 +44,4 @@ class PostController {
         service.deletePost(id)
         return ResponseEntity.noContent().build()
     }
-
-    @DeleteMapping
-    fun deleteAllPosts(): ResponseEntity<Unit> {
-        service.deleteAllPosts()
-        return ResponseEntity.noContent().build()
-    }
 }

@@ -33,12 +33,9 @@ class SecurityConfiguration {
             .csrf { csrf -> csrf.disable() } // Desabilita o CSRF (Cross-Site Request Forgery)
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // Define a política de criação de sessão como STATELESS
             .authorizeHttpRequests { auth -> auth
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .requestMatchers( "/auth/**").permitAll()
 
-                .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
+                .requestMatchers( "/api/users/**").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.POST, "/api/posts/").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/posts/").authenticated()
