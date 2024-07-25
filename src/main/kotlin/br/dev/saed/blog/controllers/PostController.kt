@@ -20,7 +20,8 @@ class PostController {
     private lateinit var userService: UserService
 
     @GetMapping
-    fun listPosts(pageable: Pageable): ResponseEntity<Page<PostDTO>> = ResponseEntity.ok(postService.listPosts(pageable))
+    fun listPosts(pageable: Pageable): ResponseEntity<Page<PostDTO>> =
+        ResponseEntity.ok(postService.listPosts(pageable))
 
     @GetMapping(value = ["/{id}"])
     fun findPostById(@PathVariable id: String): ResponseEntity<PostDTO> {
@@ -29,7 +30,6 @@ class PostController {
 
     @PostMapping
     fun insertPost(@RequestBody postDTO: PostDTO): ResponseEntity<PostDTO> {
-        userService.findUserById(postDTO.authorId).id
         return ResponseEntity.ok().body(postService.insertPost(postDTO))
     }
 
@@ -47,5 +47,10 @@ class PostController {
     @GetMapping(value = ["/author/{id}"])
     fun findPostsByAuthorId(@PathVariable id: String, pageable: Pageable): ResponseEntity<Page<PostDTO>> {
         return ResponseEntity.ok(postService.findPostsByAuthorId(id, pageable))
+    }
+
+    @GetMapping(value = ["/me"])
+    fun findPostsByAuthenticatedUser(pageable: Pageable): ResponseEntity<Page<PostDTO>> {
+        return ResponseEntity.ok(postService.findPostsUserLogged(pageable))
     }
 }

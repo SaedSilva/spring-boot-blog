@@ -39,6 +39,7 @@ class SecurityConfiguration {
                 .requestMatchers( "/api/users/**").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.POST, "/api/posts/").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/posts/").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/posts/").authenticated()
 
                 .anyRequest().permitAll()

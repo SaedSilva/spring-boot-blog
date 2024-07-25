@@ -1,12 +1,16 @@
 package br.dev.saed.blog.services
 
 import br.dev.saed.blog.dto.post.PostDTO
+import br.dev.saed.blog.dto.user.UserDTO
+import br.dev.saed.blog.dto.user.UserMinDTO
 import br.dev.saed.blog.entities.Post
 import br.dev.saed.blog.repositories.PostRepository
+import br.dev.saed.blog.repositories.UserRepository
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -15,11 +19,14 @@ import java.time.LocalDateTime
 class PostService {
 
     @Autowired
-    private lateinit var repository: PostRepository
+    private lateinit var postRepository: PostRepository
+
+    @Autowired
+    private lateinit var userRepository: UserRepository
 
     @Transactional(readOnly = true)
     fun listPosts(pageable: Pageable): Page<PostDTO> {
-        val pagePost = repository.findAll(pageable)
+        val pagePost = postRepository.findAll(pageable)
         val pagePostDTO = pagePost.map { PostDTO.fromEntity(it) }
         return pagePostDTO
     }
@@ -27,7 +34,7 @@ class PostService {
     @Transactional(readOnly = true)
     fun findPostById(id: String): PostDTO {
         try {
-            return PostDTO.fromEntity(repository.findById(id).get())
+            return PostDTO.fromEntity(postRepository.findById(id).get())
         } catch (e: NoSuchElementException) {
             throw ResourceNotFoundException("Post not found")
         }
@@ -35,21 +42,26 @@ class PostService {
 
     @Transactional
     fun insertPost(dto: PostDTO): PostDTO {
-        var entity = Post(null, dto.title, dto.content, dto.author, dto.authorId, dto.tags, LocalDateTime.now())
-        entity = repository.save(entity)
+        val autheticated = SecurityContextHolder.getContext().authentication.name
+        val user = userRepository.searchUserByEmail(autheticated).get()
+        var entity = Post(null, dto.title, dto.content, user.name, user.id!!, dto.tags, LocalDateTime.now())
+        entity = postRepository.save(entity)
         return PostDTO.fromEntity(entity)
     }
 
     @Transactional
     fun updatePost(id: String, dto: PostDTO): PostDTO {
         try {
-            val entity = repository.findById(id).get()
+            val entity = postRepository.findById(id).get()
+            val autheticated = SecurityContextHolder.getContext().authentication.name
+            val user = userRepository.searchUserByEmail(autheticated).get()
             entity.title = dto.title
             entity.content = dto.content
-            entity.author = dto.author
-            entity.authorId = dto.authorId
+            entity.author = user.name
+            entity.authorId = user.id!!
             entity.tags = dto.tags
-            repository.save(entity)
+            entity.date = LocalDateTime.now()
+            postRepository.save(entity)
             return PostDTO.fromEntity(entity)
         } catch (e: NoSuchElementException) {
             throw ResourceNotFoundException("Post not found")
@@ -58,16 +70,38 @@ class PostService {
 
     @Transactional
     fun deletePost(id: String) {
-        if (!repository.existsById(id)) {
+        if (!postRepository.existsById(id)) {
             throw ResourceNotFoundException("Post not found")
         }
-        repository.deleteById(id)
+        val autheticated = SecurityContextHolder.getContext().authentication.name
+        val user = userRepository.searchUserByEmail(autheticated).get()
+        if (postRepository.findById(id).get().authorId != user.id) {
+            throw ResourceNotFoundException("You can only delete your own posts")
+        }
+        postRepository.deleteById(id)
     }
 
     @Transactional(readOnly = true)
     fun findPostsByAuthorId(id: String, pageable: Pageable): Page<PostDTO> {
-        val pagePost = repository.findPostsByAuthorId(id, pageable)
+        val pagePost = postRepository.findPostsByAuthorId(id, pageable)
         val pagePostDTO = pagePost.map { PostDTO.fromEntity(it) }
         return pagePostDTO
+    }
+
+    @Transactional(readOnly = true)
+    fun findPostsUserLogged(pageable: Pageable): Page<PostDTO> {
+        val pagePost = postRepository.findPostsByAuthorId(getMe().id!!, pageable)
+        if(pagePost.isEmpty) {
+            throw ResourceNotFoundException("No posts found")
+        }
+        val pagePostDTO = pagePost.map { PostDTO.fromEntity(it) }
+        return pagePostDTO
+    }
+
+    @Transactional(readOnly = true)
+    fun getMe(): UserDTO {
+        val email = SecurityContextHolder.getContext().authentication.name
+        val user = userRepository.searchUserByEmail(email)
+        return UserDTO.fromEntity(user.get())
     }
 }

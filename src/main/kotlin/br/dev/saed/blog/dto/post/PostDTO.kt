@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 data class PostDTO(
     var title: String,
     var content: String,
-    var author: String,
-    var authorId: String,
+    var author: String? = null,
+    var authorId: String? = null,
     var tags: List<String>,
     var date: LocalDateTime? = null,
 ) {
