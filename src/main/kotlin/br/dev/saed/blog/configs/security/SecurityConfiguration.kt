@@ -38,9 +38,10 @@ class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET,"/api/users/me").authenticated()
                 .requestMatchers( "/api/users/**").hasRole("ADMIN")
 
-                .requestMatchers(HttpMethod.POST, "/api/posts/").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/api/posts/").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/posts/me").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/posts/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/posts/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/posts/**").authenticated()
 
                 .anyRequest().permitAll()
                 }

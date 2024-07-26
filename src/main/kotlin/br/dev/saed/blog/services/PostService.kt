@@ -4,8 +4,11 @@ import br.dev.saed.blog.dto.post.PostDTO
 import br.dev.saed.blog.dto.user.UserDTO
 import br.dev.saed.blog.dto.user.UserMinDTO
 import br.dev.saed.blog.entities.Post
+import br.dev.saed.blog.entities.User
 import br.dev.saed.blog.repositories.PostRepository
 import br.dev.saed.blog.repositories.UserRepository
+import br.dev.saed.blog.services.exceptions.IllegalDeleteException
+import br.dev.saed.blog.services.exceptions.InvalidTokenException
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -42,8 +45,7 @@ class PostService {
 
     @Transactional
     fun insertPost(dto: PostDTO): PostDTO {
-        val autheticated = SecurityContextHolder.getContext().authentication.name
-        val user = userRepository.searchUserByEmail(autheticated).get()
+        val user = getMe()
         var entity = Post(null, dto.title, dto.content, user.name, user.id!!, dto.tags, LocalDateTime.now())
         entity = postRepository.save(entity)
         return PostDTO.fromEntity(entity)
@@ -53,8 +55,8 @@ class PostService {
     fun updatePost(id: String, dto: PostDTO): PostDTO {
         try {
             val entity = postRepository.findById(id).get()
-            val autheticated = SecurityContextHolder.getContext().authentication.name
-            val user = userRepository.searchUserByEmail(autheticated).get()
+            val email = getMe().email
+            val user = userRepository.searchUserByEmail(email).get()
             entity.title = dto.title
             entity.content = dto.content
             entity.author = user.name
@@ -73,11 +75,10 @@ class PostService {
         if (!postRepository.existsById(id)) {
             throw ResourceNotFoundException("Post not found")
         }
-        val autheticated = SecurityContextHolder.getContext().authentication.name
-        val user = userRepository.searchUserByEmail(autheticated).get()
-        if (postRepository.findById(id).get().authorId != user.id) {
-            throw ResourceNotFoundException("You can only delete your own posts")
+        if (postRepository.findById(id).get().authorId != getMe().id) {
+            throw IllegalDeleteException("You can only delete your own posts")
         }
+
         postRepository.deleteById(id)
     }
 
@@ -99,9 +100,12 @@ class PostService {
     }
 
     @Transactional(readOnly = true)
-    fun getMe(): UserDTO {
+    fun getMe(): User {
         val email = SecurityContextHolder.getContext().authentication.name
         val user = userRepository.searchUserByEmail(email)
-        return UserDTO.fromEntity(user.get())
+        if(user.isEmpty) {
+            throw InvalidTokenException("Invalid token")
+        }
+        return user.get()
     }
 }

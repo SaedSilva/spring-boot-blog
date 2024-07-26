@@ -5,6 +5,7 @@ import br.dev.saed.blog.dto.user.UserMinDTO
 import br.dev.saed.blog.entities.User
 import br.dev.saed.blog.repositories.UserRepository
 import br.dev.saed.blog.services.exceptions.ExistsByEmailException
+import br.dev.saed.blog.services.exceptions.InvalidTokenException
 import br.dev.saed.blog.services.exceptions.ResourceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -64,7 +65,7 @@ class UserService {
     fun getMe(): UserMinDTO {
         val email = SecurityContextHolder.getContext().authentication.name
         val user = repository.searchUserByEmail(email)
+        if (user.isEmpty) throw InvalidTokenException("Invalid token")
         return UserMinDTO.fromEntity(user.get())
     }
-
 }
