@@ -31,7 +31,7 @@ class AuthenticationController {
     private lateinit var authenticationManager: AuthenticationManager
 
     @PostMapping(value = ["/login"])
-    fun login(@RequestBody @Valid dto: AuthenticationDTO): ResponseEntity<Any> {
+    fun login(@Valid @RequestBody dto: AuthenticationDTO): ResponseEntity<Any> {
         val emailPassword = UsernamePasswordAuthenticationToken(dto.email, dto.userPassword) // Cria um token de autenticação
         val auth = authenticationManager.authenticate(emailPassword)
         val token = tokenService.generateToken(auth.principal as User)
@@ -39,7 +39,7 @@ class AuthenticationController {
     }
 
     @PostMapping(value = ["/register"])
-    fun register(@RequestBody @Valid dto: RegisterDTO): ResponseEntity<Any> {
+    fun register(@Valid @RequestBody dto: RegisterDTO): ResponseEntity<Any> {
 
         val encryptedPassword = BCryptPasswordEncoder().encode(dto.userPassword)
         dto.userPassword = encryptedPassword
