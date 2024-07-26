@@ -23,7 +23,7 @@ class UserController {
     fun insertUser(@RequestBody dto: UserDTO): ResponseEntity<UserDTO> = ResponseEntity.ok(service.insertUser(dto))
 
     @DeleteMapping(value = ["/{id}"])
-    fun deletePost(@PathVariable id: String): ResponseEntity<Unit> {
+    fun deleteUser(@PathVariable id: String): ResponseEntity<Unit> {
         service.deleteUser(id)
         return ResponseEntity.noContent().build()
     }

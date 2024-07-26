@@ -13,4 +13,8 @@ class ValidationError(
     fun addError(fieldName: String, message: String) {
         errors.add(FieldMessage(fieldName, message))
     }
+
+    fun getErrors(): List<FieldMessage> {
+        return errors
+    }
 }
